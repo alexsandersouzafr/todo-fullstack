@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ES6", // Versão do JavaScript gerada
+    "module": "commonjs", // Sistema de módulos
+    "outDir": "./dist", // Pasta de saída para os arquivos compilados
+    "rootDir": "./src", // Pasta de origem dos arquivos TypeScript
+    "strict": true, // Ativa verificações rigorosas de tipo
+    "esModuleInterop": true, // Permite importar módulos CommonJS como ES Modules
+    "skipLibCheck": true, // Ignora a verificação de tipos nas bibliotecas
+    "resolveJsonModule": true // Permite importar arquivos JSON
+  },
+  "include": ["src/**/*"], // Inclui todos os arquivos na pasta src
+  "exclude": ["node_modules", "dist"] // Exclui a pasta node_modules e dist
+}
