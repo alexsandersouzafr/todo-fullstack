@@ -3,14 +3,13 @@
 import { Request, Response, NextFunction } from "express";
 import * as taskRepository from "../repos/taskRepository";
 import * as taskService from "../services/taskService";
-import { z } from "zod";
 import { addTaskSchema, taskIdSchema, taskSchema } from "../models/shcemas";
 import { validateRequest } from "../utils/validation";
 
 const response = (status: number, message: string) => {
   return {
     status: status,
-    data: taskRepository.getAllTasks,
+    data: taskRepository.getAllTasks(),
     message: message,
   };
 };
