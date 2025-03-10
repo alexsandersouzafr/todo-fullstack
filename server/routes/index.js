@@ -5,14 +5,22 @@ const router = express.Router();
 
 let tasks = [];
 
-const validateTask = [
+const validateTaskName = [
   body("name")
     .isString()
     .notEmpty()
     .withMessage("O nome da tarefa é obrigatório e deve ser uma string."),
 ];
 
-const validadeDone = [
+const validateId = [
+  body("id").isString().notEmpty().withMessage("O valor precisa ser booleano."),
+];
+
+const validateTaskWithId = [
+  body("name")
+    .isString()
+    .notEmpty()
+    .withMessage("O nome da tarefa é obrigatório e deve ser uma string."),
   body("id").isString().notEmpty().withMessage("O valor precisa ser booleano."),
 ];
 
@@ -30,7 +38,7 @@ router.get("/", (req, res, next) => {
   }
 });
 
-router.post("/add", validateTask, (req, res, next) => {
+router.post("/add", validateTaskName, (req, res, next) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty())
@@ -61,7 +69,7 @@ router.post("/add", validateTask, (req, res, next) => {
   }
 });
 
-router.put("/done", validadeDone, (req, res, next) => {
+router.put("/done", validateId, (req, res, next) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty())
@@ -86,6 +94,54 @@ router.put("/done", validadeDone, (req, res, next) => {
     res.status(200).json({
       status: 201,
       data: tasks,
+      message: "Task updated successfully.",
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.put("/edit", validateTaskWithId, (req, res, next) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty())
+      return res.status(400).json({
+        status: 400,
+        errors: errors.array(),
+        message: "Failed to update task.",
+      });
+
+    tasks = tasks.map((task) =>
+      task.id === req.body.id ? { ...task, name: req.body.name } : task
+    );
+
+    res.status(200).json({
+      status: 201,
+      data: tasks,
+      message: "Task updated successfully.",
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.delete("/delete", validateId, (req, res, next) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty())
+      return res.status(400).json({
+        status: 400,
+        errors: errors.array(),
+        message: "Failed to delete task.",
+      });
+
+    tasks = tasks.map((task) =>
+      task.id === req.body.id ? { ...task, deleted: true } : task
+    );
+
+    res.status(200).json({
+      status: 201,
+      data: tasks.filter((task) => !task.deleted),
       message: "Task updated successfully.",
     });
   } catch (error) {
