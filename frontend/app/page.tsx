@@ -1,21 +1,10 @@
-"use client";
-import { useEffect, useState } from "react";
+import ToDo from "@/components/todo";
 
 export default function Home() {
-  const [message, setMessage] = useState("");
-
-  useEffect(() => {
-    fetch("/api")
-      .then((res) => res.json())
-      .then((data) => {
-        setMessage(data.message);
-      });
-  }, []);
-
   return (
-    <div>
-      <h1>Fullstack App</h1>
-      <p>Message from backend: {message}</p>
+    <div className="flex flex-col gap-12 items-center justify-center h-screen">
+      <h1>TODO</h1>
+      <ToDo />
     </div>
   );
 }
