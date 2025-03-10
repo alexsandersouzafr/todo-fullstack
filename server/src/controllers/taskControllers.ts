@@ -3,6 +3,9 @@
 import { Request, Response, NextFunction } from "express";
 import * as taskRepository from "../repos/taskRepository";
 import * as taskService from "../services/taskService";
+import { z } from "zod";
+import { addTaskSchema, taskIdSchema, taskSchema } from "../models/shcemas";
+import { validateRequest } from "../utils/validation";
 
 const response = (status: number, message: string) => {
   return {
@@ -26,10 +29,12 @@ export const getAllTasks = (
 
 export const addTask = (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { name } = req.body;
+    const { name } = validateRequest(addTaskSchema, req.body);
     taskService.addTask(name);
     res.status(201).json(response(201, "Task added successfully!"));
-  } catch (error) {}
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const markTaskAsDone = (
@@ -38,10 +43,12 @@ export const markTaskAsDone = (
   next: NextFunction
 ) => {
   try {
-    const { id } = req.body;
+    const { id } = validateRequest(taskIdSchema, req.body);
     taskService.markTaskAsDone(id);
     res.status(200).json(response(200, "Task updated successfully!"));
-  } catch (error) {}
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const updateTaskName = (
@@ -50,16 +57,20 @@ export const updateTaskName = (
   next: NextFunction
 ) => {
   try {
-    const { id, name } = req.body;
+    const { id, name } = validateRequest(taskSchema, req.body);
     taskService.updateTaskName(id, name);
     res.status(200).json(response(200, "Task updated successfully!"));
-  } catch (error) {}
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const deleteTask = (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.body;
+    const { id } = validateRequest(taskIdSchema, req.body);
     taskService.deleteTask(id);
     res.status(200).json(response(200, "Task deleted successfully!"));
-  } catch (error) {}
+  } catch (error) {
+    next(error);
+  }
 };
